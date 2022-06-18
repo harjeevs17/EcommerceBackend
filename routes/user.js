@@ -28,7 +28,7 @@ router.post("/signup", (req, res) => {
           user
             .save()
             .then((user) => {
-              return res.json({ message: "User Inserted" });
+              return res.json({ message: "User Inserted in DB" });
             })
             .catch((err) => {
               console.log(err);
@@ -40,4 +40,9 @@ router.post("/signup", (req, res) => {
       });
     //res.json({ message: "successfully posted" });
   });
+
+
+
+
+
   module.exports = router;
