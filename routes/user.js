@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../keys");
 const User = mongoose.model("User");
 
-
+//Create a new user and insert in DB
 router.post("/signup", (req, res) => {
     const { name, email, password, phone } = req.body;
     if (!name || !email || !password || !phone) {
@@ -41,7 +41,7 @@ router.post("/signup", (req, res) => {
     //res.json({ message: "successfully posted" });
   });
 
-
+//Retrieve user from the DB based upon email and password
   router.post("/signin", (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -83,6 +83,34 @@ router.post("/signup", (req, res) => {
         console.log(err);
       });
   });
+
+
+ //Add address to existing users
+ router.post("/addAddress", (req, res) => {
+  const { contactName,contactPhone,addressline1,addressline2,landmark } = req.body.address;
+  if (!contactName || !contactPhone || !addressline1 || !addressline2) {
+    return res.json({ message: "Enter all the fields" });
+  }
+  const data  = {
+      "contactName":contactName,
+      "contactPhone":contactPhone,
+      "addressline1":addressline1,
+      "addressline2":addressline2,
+      "landmark":landmark
+  }
+  User.findByIdAndUpdate(
+    req.body._id,
+    {
+      $push: { address: data } ,
+    },
+    (err, result) => {
+      if (err) {
+        return res.json({ error: err });
+      }
+      return res.json(result);
+    }
+  )});
+       
 
 
 

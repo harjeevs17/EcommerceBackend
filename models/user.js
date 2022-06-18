@@ -20,6 +20,6 @@ const UserSchema = new Schema({
       ref: "Category",
       required: true, 
     },
-    address:[{ type: ObjectId, ref: "Address" }]
+    address:[{ type: Object, ref: "Address" }]
   });
   mongoose.model("User", UserSchema);
