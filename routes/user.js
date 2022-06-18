@@ -42,6 +42,48 @@ router.post("/signup", (req, res) => {
   });
 
 
+  router.post("/signin", (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.json({ message: "Enter the given fields" });
+    }
+    User.findOne({ email: email })
+      .then((savedUser) => {
+        if (!savedUser) {
+          return res.json({ error: "Given email is not registered" });
+        }
+        bcrypt
+          .compare(password, savedUser.password)
+          .then((matched) => {
+            if (!matched) {
+              return res.json({ error: "Password did not match" });
+            } else {
+              /*res.json({ message: "User logged in" });
+              return savedUser;*/
+              //console.log(savedUser);
+              const {
+                _id,
+                name,
+                email,
+                phone,
+                address,
+              } = savedUser;
+              const token = jwt.sign({ _id: savedUser._id }, JWT_SECRET);
+              return res.json({
+                token: token,
+                user: { _id, name, email, phone, address },
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+
 
 
 
