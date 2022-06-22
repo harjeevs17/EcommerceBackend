@@ -17,9 +17,13 @@ const UserSchema = new Schema({
     email: 
     { 
       type: String, 
-      ref: "Category",
       required: true, 
     },
-    address:[{ type: Object, ref: "Address" }]
+    address:[{ type: Object, ref: "Address" }],
+    cart:[
+     {
+        type:Object
+     }
+    ]
   });
   mongoose.model("User", UserSchema);

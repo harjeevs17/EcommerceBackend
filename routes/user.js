@@ -111,8 +111,44 @@ router.post("/signup", (req, res) => {
     }
   )});
        
+  //Add product inside cart
+  router.post("/addCart", (req, res) => {
+    const { _id,product } = req.body;
+    if (!product) {
+      return res.json({ message: "Product id cannot be empty" });
+    }
+    User.findByIdAndUpdate(
+      _id,
+      {
+        $push: { cart: mongoose.Types.ObjectId(product)} ,
+      },
+      (err, result) => {
+        if (err) {
+          return res.json({ error: err });
+        }
+        return res.json(result);
+      }
+    )  
+  });
 
-
-
-
+  //Delete product from cart
+  router.post("/deleteCart", (req, res) => {
+    const { _id,product } = req.body;
+    if (!product) {
+      return res.json({ message: "Product id cannot be empty" });
+    }
+    User.findByIdAndUpdate(
+      _id,
+      {
+        $pull: { cart: mongoose.Types.ObjectId(product)} ,
+      },
+      (err, result) => {
+        if (err) {
+          return res.json({ error: err });
+        }
+        return res.json(result);
+      }
+    )  
+  });
+  
   module.exports = router;
