@@ -5,6 +5,14 @@ const CategorySchema = new Schema({
     title: {
         type: String,
         required: true,
+    },
+    description: {
+        type: String,
+        required: true,
+    },
+    active:{
+        type:Number,
+        default:1,
     }
-});
+}, { timestamps: true });
 mongoose.model("Category", CategorySchema);    
