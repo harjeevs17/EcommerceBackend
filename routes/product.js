@@ -5,40 +5,76 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../keys");
-const User = mongoose.model("Product");
+const Product = mongoose.model("Product");
 
-//Create a new user and insert in DB
-router.post("/signup", (req, res) => {
-    const { name, email, password, phone } = req.body;
-    if (!name || !email || !password || !phone) {
+//Create a new product and insert in DB
+router.post("/addProduct", (req, res) => {
+    const { title, description, price, category } = req.body;
+    if (!title || !description || !price || !category) {
       return res.json({ error: "Please enter all fields" });
     }
-    User.findOne({ email: email })
-      .then((savedUser) => {
-        if (savedUser) {
-          return res.json({ error: "User exists with this email" });
+    Product.findOne({ title: title })
+      .then((productData) => {
+        if (productData) {
+          return res.json({ error: "Product exists with the same name" });
         }
-        bcrypt.hash(password, 12).then((hashedPassword) => {
-          const user = new User({
-            name: name,
-            email: email,
-            password: hashedPassword,
-            phone: phone,
+        const product = new Product({
+            title: title,
+            description: description,
+            price: price,
+            category: mongoose.Types.ObjectId(category)
           });
-          user
+          product
             .save()
-            .then((user) => {
-              return res.json({ message: "User Inserted in DB" });
+            .then((product) => {
+              return res.json({ message: "Product Inserted in DB" });
             })
             .catch((err) => {
               console.log(err);
             });
-        });
       })
       .catch((err) => {
         console.log(err);
       });
     //res.json({ message: "successfully posted" });
   });
+
+  //Delete a product
+  router.post("/deleteProduct", (req, res) => {
+    Product.findByIdAndUpdate(
+        req.body._id,
+        {
+          $set: { active: 0 } ,
+        },
+        (err, result) => {
+          if (err) {
+            return res.json({ error: err });
+          }
+          return res.json(result);
+        }
+   )});
+
+   //Get all products
+   router.get("/getAllProducts",(req,res)=>{
+    Product.find({},
+      (err,result)=>{
+        if (err) {
+          return res.status(400).json({ err });
+        }
+        return res.json(result);
+       });
+   })
+
+   //Get all products given a category id
+   router.get("/getProductUsingCategoryId/:categoryId",(req,res)=>{
+    Product.find({category:req.params.categoryId},
+     (err,result)=>{
+      if (err) {
+        return res.status(400).json({ err });
+      }
+      return res.json(result);
+     } )
+  })
+
 
   module.exports = router;

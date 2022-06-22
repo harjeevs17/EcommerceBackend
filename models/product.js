@@ -15,10 +15,14 @@ const ProductSchema = new Schema({
     required: true,
   },
   category: 
-    { 
-        type: ObjectId, 
-        ref: "Category" 
-    },
-});
+  { 
+     type: ObjectId, 
+     ref: "Category" 
+  },
+  active:{
+    type:Number,
+    default:1
+  }  
+},{ timestamps: true });
 mongoose.model("Product", ProductSchema);
 
