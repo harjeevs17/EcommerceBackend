@@ -9,8 +9,8 @@ const Product = mongoose.model("Product");
 
 //Create a new product and insert in DB
 router.post("/addProduct", (req, res) => {
-    const { title, description, price, category } = req.body;
-    if (!title || !description || !price || !category) {
+    const { title, description, price, category ,image,sex} = req.body;
+    if (!title || !description || !price || !category || !image || !sex) {
       return res.json({ error: "Please enter all fields" });
     }
     Product.findOne({ title: title })
@@ -22,7 +22,9 @@ router.post("/addProduct", (req, res) => {
             title: title,
             description: description,
             price: price,
-            category: mongoose.Types.ObjectId(category)
+            category: mongoose.Types.ObjectId(category),
+            image:image,
+            sex:sex
           });
           product
             .save()
@@ -75,6 +77,10 @@ router.post("/addProduct", (req, res) => {
       return res.json(result);
      } )
   })
+
+ 
+
+
 
 
   module.exports = router;

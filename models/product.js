@@ -19,6 +19,14 @@ const ProductSchema = new Schema({
      type: ObjectId, 
      ref: "Category" 
   },
+  image:{
+    type: String,
+    required: true,
+  },
+  sex:{
+    type: String,
+    required: true,
+  },
   active:{
     type:Number,
     default:1

@@ -51,4 +51,17 @@ router.post("/addCategory", (req, res) => {
           return res.json(result);
         }
    )});
-  module.exports = router;
+
+  //Get all categories
+
+  router.get("/getAllCategories",(req,res)=>{
+    Category.find({},
+      (err,result)=>{
+        if (err) {
+          return res.status(400).json({ err });
+        }
+        return res.json(result);
+       });
+   })
+
+   module.exports = router;
