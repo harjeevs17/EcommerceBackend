@@ -67,11 +67,12 @@ router.post("/signup", (req, res) => {
                 email,
                 phone,
                 address,
+                cart
               } = savedUser;
               const token = jwt.sign({ _id: savedUser._id }, JWT_SECRET);
               return res.json({
                 token: token,
-                user: { _id, name, email, phone, address },
+                user: { _id, name, email, phone, address,cart },
               });
             }
           })
